@@ -3,10 +3,9 @@ mod config;
 
 fn main() {
     // Initialize application data directory
-    if let Err(e) = config::init::init_config() {
-        eprintln!("Failed to initialize config: {}", e);
-        return;
+    match config::init::init_config() {
+        Ok(_) => println!("Configuration initialized successfully."),
+        Err(e) => eprintln!("Failed to initialize configuration: {}", e),
     }
-    
     println!("Hello, world!");
 }
