@@ -59,14 +59,19 @@ pub fn read_config() -> std::io::Result<Configuration> {
     let config: Configuration = serde_json::from_str(&contents)
         .expect("Failed to deserialize configuration");
 
-    println!("Configuration loaded from {:?}", config_path);
-    println!("Name: {}", config.name);
-    println!("Callsign: {}", config.callsign);
-    println!("Maidenhead: {}", config.maidenhead);
-    println!("Latitude: {}", config.latitude);
-    println!("Longitude: {}", config.longitude);
-    println!("Altitude: {}", config.altitude);
-    println!("Logbooks: {}", config.logbooks.len());
-    
+    // Only print these in debug mode
+    #[cfg(debug_assertions)]
+    {
+        println!("Debug: Configuration loaded successfully.");
+        println!("Configuration loaded from {:?}", config_path);
+        println!("Name: {}", config.name);
+        println!("Callsign: {}", config.callsign);
+        println!("Maidenhead: {}", config.maidenhead);
+        println!("Latitude: {}", config.latitude);
+        println!("Longitude: {}", config.longitude);
+        println!("Altitude: {}", config.altitude);
+        println!("Logbooks: {}", config.logbooks.len());
+    }
+
     Ok(config)
 }
