@@ -25,7 +25,7 @@ pub fn init_config() -> std::io::Result<()> {
     let default_config = Configuration {
         name: String::from("Default User"),
         callsign: String::from("N0CALL"),
-        maidenhead: String::from("FN31pr"),
+        maidenhead: String::from("EN80TU"),
         latitude: 0u64,
         longitude: 0u64,
         altitude: 0u64,
@@ -41,4 +41,32 @@ pub fn init_config() -> std::io::Result<()> {
     }
 
     Ok(())
+}
+
+pub fn read_config() -> std::io::Result<Configuration> {
+    let config_path = appdata_path().join("config.json");
+    if !config_path.exists() {
+        return Err(std::io::Error::new(
+            std::io::ErrorKind::NotFound,
+            "Configuration file not found",
+        ));
+    }
+
+    let mut file = File::open(&config_path)?;
+    let mut contents = String::new();
+    file.read_to_string(&mut contents)?;
+
+    let config: Configuration = serde_json::from_str(&contents)
+        .expect("Failed to deserialize configuration");
+
+    println!("Configuration loaded from {:?}", config_path);
+    println!("Name: {}", config.name);
+    println!("Callsign: {}", config.callsign);
+    println!("Maidenhead: {}", config.maidenhead);
+    println!("Latitude: {}", config.latitude);
+    println!("Longitude: {}", config.longitude);
+    println!("Altitude: {}", config.altitude);
+    println!("Logbooks: {}", config.logbooks.len());
+    
+    Ok(config)
 }
